@@ -41,11 +41,13 @@ describe('validation', () => {
         formData: {
           name: '',
           blurNumber: '',
+          url: '',
           pass: ''
         },
         status: {
           name: {},
           blurNumber: {},
+          url: {},
           pass: {}
         }
       }
@@ -81,9 +83,13 @@ describe('validation', () => {
         <Validator trigger="onBlur" rules={[{type: 'number', transform: toNumber}]}>
           <input name="blurNumber" value={state.formData.blurNumber} ref="blurInput" />
         </Validator>
+        <Validator trigger="onBlur" rules={[{type: 'url'}]}>
+          <input name="url" value={state.formData.url} ref="urlInput" />
+        </Validator>
       {state.status.name.errors ? <div ref='error'>{state.status.name.errors.join(',')}</div> : null}
-        {state.status.pass.errors ? <div ref='error2'>{state.status.pass.errors.join(',')}</div> : null}
-         {state.status.blurNumber.errors ? <div ref='error3'>{state.status.blurNumber.errors.join(',')}</div> : null}
+      {state.status.pass.errors ? <div ref='error2'>{state.status.pass.errors.join(',')}</div> : null}
+      {state.status.blurNumber.errors ? <div ref='error3'>{state.status.blurNumber.errors.join(',')}</div> : null}
+      {state.status.url.errors ? <div ref='error4'>{state.status.url.errors.join(',')}</div> : null}
       </Validation>;
     }
 
@@ -213,6 +219,18 @@ describe('validation', () => {
       Simulate.change(blurInput);
       form.refs.validation.validate(()=> {
         expect(form.refs.error3).not.to.be.ok();
+        done();
+      });
+    });
+  });
+  
+  describe('url', ()=> {
+    it('blur works for ok', (done)=> {
+      var urlInput = (form.refs.urlInput);
+      urlInput.value = 'http://www.taobao.com';
+      Simulate.change(urlInput);
+      form.refs.validation.validate(()=> {
+        expect(form.refs.error4).not.to.be.ok();
         done();
       });
     });
